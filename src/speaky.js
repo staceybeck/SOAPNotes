@@ -1,10 +1,14 @@
-import React, {useEffect, useRef, useState} from 'react';
-import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import React, { useEffect, useRef, useState } from "react";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 import "./App.css";
 import microPhoneIcon from "./microphone.png";
 
 const Speaky = () => {
- const { transcript, resetTranscript } = useSpeechRecognition();
+  const { transcript, resetTranscript } = useSpeechRecognition();
+  const [note, setNote] = useState(null);
+  const [textEnabled, setTextEnabled] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const microphoneRef = useRef(null);
   if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
@@ -15,7 +19,7 @@ const Speaky = () => {
     );
   }
   const handleListing = () => {
-      console.log("handleListing");
+    console.log("handleListing");
     setIsListening(true);
     microphoneRef.current.classList.add("listening");
     SpeechRecognition.startListening({
@@ -30,7 +34,26 @@ const Speaky = () => {
   const handleReset = () => {
     stopHandle();
     resetTranscript();
+    setNote(null);
   };
+  const handleOutput = async () => {
+    setNote(null);
+    //json output
+    const response = await fetch(
+      "https://soapnotes-web-service2.onrender.com/analyze?q=" +
+        encodeURIComponent(transcript)
+    );
+    const data = await response.json();
+    setNote(data.text);
+    setTextEnabled(true)
+  };
+  const handleText = async () => {
+    setTextEnabled(false);
+    const response = await fetch(
+      "https://soapnotes-web-service2.onrender.com/text?q=" +
+        encodeURIComponent(note)
+    );
+  }
   return (
     <div className="microphone-wrapper">
       <div className="mircophone-container">
@@ -49,18 +72,43 @@ const Speaky = () => {
             Stop
           </button>
         )}
-          {(<button className="microphone-reset btn" onClick={handleReset}>
+        {
+          <button className="microphone-reset btn" onClick={handleReset}>
             Reset
-          </button>)}
+          </button>
+        }
+        {
+          <button className="generative-outputs btn" onClick={handleOutput}>
+            Generate Note
+          </button>
+        }
+        {
+          <button className="output-text btn" onClick={handleText} disabled={!textEnabled}>
+            Text Note
+          </button>
+        }
       </div>
       {transcript && (
         <div className="microphone-result-container">
+          {<div style={{fontWeight: 'bold', marginBottom: 15}}>Dictation:</div>}
           <div className="microphone-result-text">{transcript}</div>
-
+        </div>
+      )}
+      {note && (
+        <div className="generative-outputs-container">
+          {<div style={{fontWeight: 'bold', marginBottom: 15}}>Generated Note:</div>}
+          {note.split("\n").map((line, index) => (
+            <div key={index}
+              className="generative-outputs-text"
+              style={{ marginBottom: 10 }}
+            >
+              {line}
+            </div>
+          ))}
         </div>
       )}
     </div>
   );
-}
+};
 
 export default Speaky;
