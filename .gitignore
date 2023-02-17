@@ -158,3 +158,4 @@ yarn-error.log*
 
 # AUTH TOKENS, don't check in
 .env.secret
+env.secret
