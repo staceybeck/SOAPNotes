@@ -18,3 +18,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Using Render to deploy app on a static server
 - This repository is connected with [render](https://render.com/docs/deploy-create-react-app) to run the app on a static server in the cloud.
+
+### Next Steps
+- send text as an input to a prompt using spellbook API
+- send output back to app 
+  - nice to have: save output as a .txt and send as an email to user
+  - need to build out email sign up.
