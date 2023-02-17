@@ -5,6 +5,7 @@ dotenv.config({ path: "./.env.secret" });
 import cors from "cors";
 import express from "express";
 import fetch from "node-fetch";
+import twilio from "twilio";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -29,6 +30,23 @@ app.get("/analyze", async (req, res) => {
   const json = await resp.json();
 
   res.send(json);
+});
+
+app.get("/text", async (req, res) => {
+  const { q } = req.query;
+
+  const twilioClient = twilio(
+    process.env.TWILIO_ACCOUNT_ID,
+    process.env.TWILIO_AUTH
+  );
+
+  await twilioClient.messages
+    .create({
+      body: q,
+      from: "+18778032934",
+      to: process.env.PHONE_NUMBER,
+    })
+  res.send({ message: "sent" });
 });
 
 app.listen(port, () => {
