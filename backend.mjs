@@ -1,12 +1,15 @@
 /* eslint-disable import/first */
 /** An express eerver with a single GET endpoint /analyze */
-import * as dotenv from 'dotenv';
-dotenv.config({ path: './.env.secret' });
+import * as dotenv from "dotenv";
+dotenv.config({ path: "./.env.secret" });
+import cors from "cors";
 import express from "express";
 import fetch from "node-fetch";
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
+
+app.use(cors()); // TODO limit CORS to specific domains
 
 app.get("/analyze", async (req, res) => {
   const { q } = req.query;
@@ -19,7 +22,7 @@ app.get("/analyze", async (req, res) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Basic ",
+      Authorization: `Basic ${process.env.SPELLBOOK_AUTH}`,
     },
     body: JSON.stringify(data),
   });
