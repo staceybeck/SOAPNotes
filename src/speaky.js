@@ -56,7 +56,6 @@ const Speaky = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Basic ${process.env.SPELLBOOK_AUTH}`,
         },
         body: JSON.stringify({ q: note }),
       }
