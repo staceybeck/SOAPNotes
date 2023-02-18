@@ -50,16 +50,42 @@ const Speaky = () => {
   const handleText = async () => {
     setTextEnabled(false);
 
-    const resp = await fetch(
-      "https://soapnotes-web-service2.onrender.com/text",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ q: note }),
+    try {
+      const resp = await fetch(
+        "https://soapnotes-web-service2.onrender.com/text",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ q: note }),
+        }
+      );
+
+      if (!resp.ok) {
+        const resp3 = await fetch(
+          "https://soapnotes-web-service2.onrender.com/text",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ q: note }),
+          }
+        );
       }
-    );
+    } catch (e) {
+      const resp2 = await fetch(
+        "https://soapnotes-web-service2.onrender.com/text",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ q: note }),
+        }
+      );
+    }
   };
   return (
     <div className="microphone-wrapper">
