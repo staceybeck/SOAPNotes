@@ -45,15 +45,23 @@ const Speaky = () => {
     );
     const data = await response.json();
     setNote(data.text);
-    setTextEnabled(true)
+    setTextEnabled(true);
   };
   const handleText = async () => {
     setTextEnabled(false);
-    const response = await fetch(
-      "https://soapnotes-web-service2.onrender.com/text?q=" +
-        encodeURIComponent(note)
+
+    const resp = await fetch(
+      "https://soapnotes-web-service2.onrender.com/text",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ${process.env.SPELLBOOK_AUTH}`,
+        },
+        body: JSON.stringify({ q: note }),
+      }
     );
-  }
+  };
   return (
     <div className="microphone-wrapper">
       <div className="mircophone-container">
@@ -83,22 +91,35 @@ const Speaky = () => {
           </button>
         }
         {
-          <button className="output-text btn" onClick={handleText} disabled={!textEnabled}>
+          <button
+            className="output-text btn"
+            onClick={handleText}
+            disabled={!textEnabled}
+          >
             Text Note
           </button>
         }
       </div>
       {transcript && (
         <div className="microphone-result-container">
-          {<div style={{fontWeight: 'bold', marginBottom: 15}}>Dictation:</div>}
+          {
+            <div style={{ fontWeight: "bold", marginBottom: 15 }}>
+              Dictation:
+            </div>
+          }
           <div className="microphone-result-text">{transcript}</div>
         </div>
       )}
       {note && (
         <div className="generative-outputs-container">
-          {<div style={{fontWeight: 'bold', marginBottom: 15}}>Generated Note:</div>}
+          {
+            <div style={{ fontWeight: "bold", marginBottom: 15 }}>
+              Generated Note:
+            </div>
+          }
           {note.split("\n").map((line, index) => (
-            <div key={index}
+            <div
+              key={index}
               className="generative-outputs-text"
               style={{ marginBottom: 10 }}
             >

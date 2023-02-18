@@ -11,6 +11,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(cors()); // TODO limit CORS to specific domains
+app.use(express.json());
 
 app.get("/analyze", async (req, res) => {
   const { q } = req.query;
@@ -32,8 +33,8 @@ app.get("/analyze", async (req, res) => {
   res.send(json);
 });
 
-app.get("/text", async (req, res) => {
-  const { q } = req.query;
+app.post("/text", async (req, res) => {
+  const { q } = req.body;
 
   const twilioClient = twilio(
     process.env.TWILIO_ACCOUNT_ID,
