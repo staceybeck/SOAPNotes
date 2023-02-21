@@ -13,8 +13,8 @@ const port = process.env.PORT || 3000;
 app.use(cors()); // TODO limit CORS to specific domains
 app.use(express.json());
 
-app.get("/analyze", async (req, res) => {
-  const { q } = req.query;
+app.post("/analyze", async (req, res) => {
+  const { q } = req.body;
 
   const data = {
     input: q,

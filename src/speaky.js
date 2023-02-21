@@ -40,8 +40,14 @@ const Speaky = () => {
     setNote(null);
     //json output
     const response = await fetch(
-      "https://soapnotes-web-service2.onrender.com/analyze?q=" +
-        encodeURIComponent(transcript)
+      "https://soapnotes-web-service2.onrender.com/analyze",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ q: transcript }),
+      }
     );
     const data = await response.json();
     setNote(data.text);
