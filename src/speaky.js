@@ -40,7 +40,7 @@ const Speaky = () => {
     setNote(null);
     //json output
     const response = await fetch(
-      "https://soapnotes-development-service.onrender.com",
+      "https://soapnotes-development-service.onrender.com/analyze",
       {
         method: "POST",
         headers: {
