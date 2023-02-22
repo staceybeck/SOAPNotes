@@ -1,5 +1,5 @@
 /* eslint-disable import/first */
-/** An express eerver with a single GET endpoint /analyze */
+/** An express server with a single GET endpoint /analyze */
 import * as dotenv from "dotenv";
 dotenv.config({ path: "./.env.secret" });
 import cors from "cors";
@@ -44,7 +44,7 @@ app.post("/text", async (req, res) => {
   await twilioClient.messages
     .create({
       body: q,
-      from: "+18778032934",
+      from: "+18776382358",
       to: process.env.PHONE_NUMBER,
     })
   res.send({ message: "sent" });
