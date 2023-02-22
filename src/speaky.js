@@ -40,7 +40,7 @@ const Speaky = () => {
     setNote(null);
     //json output
     const response = await fetch(
-      "https://soapnotes-web-service2.onrender.com/analyze",
+      "https://soapnotes-development-service.onrender.com",
       {
         method: "POST",
         headers: {
@@ -58,7 +58,7 @@ const Speaky = () => {
 
     try {
       const resp = await fetch(
-        "https://soapnotes-web-service2.onrender.com/text",
+        "https://soapnotes-development-service.onrender.com/text",
         {
           method: "POST",
           headers: {
@@ -70,7 +70,7 @@ const Speaky = () => {
 
       if (!resp.ok) {
         const resp3 = await fetch(
-          "https://soapnotes-web-service2.onrender.com/text",
+          "https://soapnotes-development-service.onrender.com/text",
           {
             method: "POST",
             headers: {
@@ -82,7 +82,7 @@ const Speaky = () => {
       }
     } catch (e) {
       const resp2 = await fetch(
-        "https://soapnotes-web-service2.onrender.com/text",
+        "https://soapnotes-development-service.onrender.com/text",
         {
           method: "POST",
           headers: {
