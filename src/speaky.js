@@ -127,7 +127,7 @@ const Speaky = () => {
             onClick={handleText}
             disabled={!textEnabled}
           >
-            Text Note
+            Text Note to me
           </button>
         }
       </div>
