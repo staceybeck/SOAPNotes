@@ -311,7 +311,7 @@ body {
   min-width: 100px;
  }
 }
-@media screen and (max-width: 360px) {
+@media screen and (max-width: 425px) {
   body p {
     font-size: 8px;
   }.btn {
@@ -347,7 +347,7 @@ body {
  }.microphone-icon-container {
   width: 30px;
   height: 30px;
-  border-radius: 50%;
+  border-radius: 75%;
   padding: 3px;
   margin-right: 0px;
   position: right;
