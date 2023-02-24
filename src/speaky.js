@@ -4,6 +4,7 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import "./App.css";
 import microPhoneIcon from "./microphone.png";
+import { useMediaQuery } from 'react-responsive'
 
 const Speaky = () => {
   const { transcript, resetTranscript } = useSpeechRecognition();
@@ -104,16 +105,16 @@ const Speaky = () => {
           <img src={microPhoneIcon} className="microphone-icon" />
         </div>
         <div className="microphone-status">
-          {isListening ? "Listening..." : "Click to start Listening"}
+          {isListening ? "Listening..." : "Press to Record"}
         </div>
         {isListening && (
           <button className="microphone-stop btn" onClick={stopHandle}>
-            Stop
+            Pause Recording
           </button>
         )}
         {
           <button className="microphone-reset btn" onClick={handleReset}>
-            Reset
+            Reset Note
           </button>
         }
         {
@@ -127,7 +128,7 @@ const Speaky = () => {
             onClick={handleText}
             disabled={!textEnabled}
           >
-            Text Note to me
+            Text Note
           </button>
         }
       </div>
