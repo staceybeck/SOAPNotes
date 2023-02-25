@@ -1,4 +1,4 @@
-import logo from "./SOAPNotes.png";
+import logo from "./soapnotes_logo_drk.png";
 import "./App.css";
 import Speaky from "./speaky.js";
 
