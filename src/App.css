@@ -335,7 +335,7 @@ body {
     min-width: 100px;
   }
 }
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 428px) {
   body p {
     font-size: 8px;
   }
