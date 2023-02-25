@@ -1,4 +1,4 @@
-![](src/SOAPNotes.png)
+![](src/soapnotes_logo_drk.png)
 
 [SOAPNotes](https://soapnotes.onrender.com) is an app to stream physical therapy interactions, converting speech to text, and using generative AI to summarize interaction into treatment notes.
 

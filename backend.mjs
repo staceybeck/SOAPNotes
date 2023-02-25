@@ -41,12 +41,11 @@ app.post("/text", async (req, res) => {
     process.env.TWILIO_AUTH
   );
 
-  await twilioClient.messages
-    .create({
-      body: q,
-      from: "+18776382358",
-      to: process.env.PHONE_NUMBER,
-    })
+  await twilioClient.messages.create({
+    body: q,
+    from: "+18776382358",
+    to: process.env.PHONE_NUMBER,
+  });
   res.send({ message: "sent" });
 });
 

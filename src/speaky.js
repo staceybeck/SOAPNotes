@@ -1,9 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import "./App.css";
+import ky from "ky";
 import microPhoneIcon from "./microphone.png";
+import { Oval } from 'react-loading-icons';
 
 const Speaky = () => {
   const { transcript, resetTranscript } = useSpeechRecognition();
@@ -11,10 +13,12 @@ const Speaky = () => {
   const [textEnabled, setTextEnabled] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const microphoneRef = useRef(null);
-  if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
+  const [loading, setLoading] = useState(false);
+  if (!SpeechRecognition.browserSupportsSpeechRecognition) {
     return (
       <div className="mircophone-container">
-        Browser is not Support Speech Recognition.
+        Your browser does not support speech recognition. Please try this using
+        Chrome or Safari.
       </div>
     );
   }
@@ -22,9 +26,11 @@ const Speaky = () => {
     console.log("handleListing");
     setIsListening(true);
     microphoneRef.current.classList.add("listening");
-    SpeechRecognition.startListening({
-      continuous: true,
-    });
+    if (SpeechRecognition.browserSupportsSpeechRecognition) {
+      SpeechRecognition.startListening({ continuous: true });
+    } else {
+      SpeechRecognition.startListening({ continuous: false });
+    }
   };
   const stopHandle = () => {
     setIsListening(false);
@@ -38,61 +44,27 @@ const Speaky = () => {
   };
   const handleOutput = async () => {
     setNote(null);
+    setLoading(true);
     //json output
-    const response = await fetch(
-      "https://soapnotes-web-service2.onrender.com/analyze",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+    const data = await ky
+      .post("https://soapnotes-development-service.onrender.com/analyze", {
+        json: {
+          q: transcript,
         },
-        body: JSON.stringify({ q: transcript }),
-      }
-    );
-    const data = await response.json();
+      })
+      .json();
     setNote(data.text);
+    setLoading(false);
     setTextEnabled(true);
   };
   const handleText = async () => {
     setTextEnabled(false);
 
-    try {
-      const resp = await fetch(
-        "https://soapnotes-web-service2.onrender.com/text",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ q: note }),
-        }
-      );
-
-      if (!resp.ok) {
-        const resp3 = await fetch(
-          "https://soapnotes-web-service2.onrender.com/text",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ q: note }),
-          }
-        );
-      }
-    } catch (e) {
-      const resp2 = await fetch(
-        "https://soapnotes-web-service2.onrender.com/text",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ q: note }),
-        }
-      );
-    }
+    await ky.post("https://soapnotes-development-service.onrender.com/text", {
+      json: { q: note },
+    });
   };
+
   return (
     <div className="microphone-wrapper">
       <div className="mircophone-container">
@@ -101,33 +73,37 @@ const Speaky = () => {
           ref={microphoneRef}
           onClick={handleListing}
         >
-          <img src={microPhoneIcon} className="microphone-icon" />
+          <img
+            src={microPhoneIcon}
+            className="microphone-icon"
+            alt="Microphone"
+          />
         </div>
         <div className="microphone-status">
-          {isListening ? "Listening..." : "Click to start Listening"}
+          {isListening ? "Listening..." : "Press to Record"}
         </div>
         {isListening && (
           <button className="microphone-stop btn" onClick={stopHandle}>
-            Stop
+            Pause Recording
           </button>
         )}
         {
           <button className="microphone-reset btn" onClick={handleReset}>
-            Reset
+            Reset Note
           </button>
         }
         {
-          <button className="generative-outputs btn" onClick={handleOutput}>
-            Generate Note
+          <button className="generative-outputs btn"
+                  onClick={handleOutput}>
+            {loading ? <Oval stroke="#fff"
+                             strokeWidth="10"
+                             height="20px"
+                             width="20px"/> :"Generate Note"}
           </button>
         }
         {
-          <button
-            className="output-text btn"
-            onClick={handleText}
-            disabled={!textEnabled}
-          >
-            Text Note to me
+          <button className="output-text btn" onClick={handleText} disabled={!textEnabled}>
+            Text Note
           </button>
         }
       </div>
