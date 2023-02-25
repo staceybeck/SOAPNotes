@@ -3,6 +3,7 @@ import SpeechRecognition, {
   useSpeechRecognition
 } from "react-speech-recognition";
 import "./App.css";
+import ky from "ky";
 import microPhoneIcon from "./microphone.png";
 
 const Speaky = () => {
@@ -14,7 +15,7 @@ const Speaky = () => {
   if (!SpeechRecognition.browserSupportsSpeechRecognition) {
     return (
       <div className="mircophone-container">
-        Browser is not Support Speech Recognition.
+        Your browser does not support speech recognition. Please try this using Chrome or Safari.
       </div>
     );
   }
@@ -44,60 +45,25 @@ const Speaky = () => {
   const handleOutput = async () => {
     setNote(null);
     //json output
-    const response = await fetch(
+    const data = await ky.post(
       "https://soapnotes-development-service.onrender.com/analyze",
       {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+        json: {
+          q: transcript,
         },
-        body: JSON.stringify({ q: transcript }),
       }
-    );
-    const data = await response.json();
+    ).json();
     setNote(data.text);
     setTextEnabled(true);
   };
   const handleText = async () => {
     setTextEnabled(false);
 
-    try {
-      const resp = await fetch(
-        "https://soapnotes-development-service.onrender.com/text",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ q: note }),
-        }
-      );
-
-      if (!resp.ok) {
-        const resp3 = await fetch(
-          "https://soapnotes-development-service.onrender.com/text",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ q: note }),
-          }
-        );
-      }
-    } catch (e) {
-      const resp2 = await fetch(
-        "https://soapnotes-development-service.onrender.com/text",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ q: note }),
-        }
-      );
-    }
+    await ky.post("https://soapnotes-development-service.onrender.com/text", {
+      json: { q: note },
+    });
   };
+
   return (
     <div className="microphone-wrapper">
       <div className="mircophone-container">
@@ -106,7 +72,11 @@ const Speaky = () => {
           ref={microphoneRef}
           onClick={handleListing}
         >
-          <img src={microPhoneIcon} className="microphone-icon" />
+          <img
+            src={microPhoneIcon}
+            className="microphone-icon"
+            alt="Microphone"
+          />
         </div>
         <div className="microphone-status">
           {isListening ? "Listening..." : "Press to Record"}
