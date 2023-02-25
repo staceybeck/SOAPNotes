@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import SpeechRecognition, {
-  useSpeechRecognition,
+  useSpeechRecognition
 } from "react-speech-recognition";
 import "./App.css";
 import microPhoneIcon from "./microphone.png";
-import { useMediaQuery } from 'react-responsive'
 
 const Speaky = () => {
   const { transcript, resetTranscript } = useSpeechRecognition();
@@ -12,7 +11,7 @@ const Speaky = () => {
   const [textEnabled, setTextEnabled] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const microphoneRef = useRef(null);
-  if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
+  if (!SpeechRecognition.browserSupportsSpeechRecognition) {
     return (
       <div className="mircophone-container">
         Browser is not Support Speech Recognition.
@@ -23,9 +22,14 @@ const Speaky = () => {
     console.log("handleListing");
     setIsListening(true);
     microphoneRef.current.classList.add("listening");
-    SpeechRecognition.startListening({
-      continuous: true,
-    });
+    if (SpeechRecognition.browserSupportsSpeechRecognition) {
+      SpeechRecognition.startListening({ continuous: true })
+    } else {SpeechRecognition.startListening({ continuous: false })
+      // Fallback behaviour
+    };
+    //SpeechRecognition.startListening({
+    //  continuous: true,
+    //});
   };
   const stopHandle = () => {
     setIsListening(false);
