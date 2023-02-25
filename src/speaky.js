@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import SpeechRecognition, {
-  useSpeechRecognition
+  useSpeechRecognition,
 } from "react-speech-recognition";
 import "./App.css";
 import ky from "ky";
@@ -15,7 +15,8 @@ const Speaky = () => {
   if (!SpeechRecognition.browserSupportsSpeechRecognition) {
     return (
       <div className="mircophone-container">
-        Your browser does not support speech recognition. Please try this using Chrome or Safari.
+        Your browser does not support speech recognition. Please try this using
+        Chrome or Safari.
       </div>
     );
   }
@@ -24,13 +25,10 @@ const Speaky = () => {
     setIsListening(true);
     microphoneRef.current.classList.add("listening");
     if (SpeechRecognition.browserSupportsSpeechRecognition) {
-      SpeechRecognition.startListening({ continuous: true })
-    } else {SpeechRecognition.startListening({ continuous: false })
-      // Fallback behaviour
-    };
-    //SpeechRecognition.startListening({
-    //  continuous: true,
-    //});
+      SpeechRecognition.startListening({ continuous: true });
+    } else {
+      SpeechRecognition.startListening({ continuous: false });
+    }
   };
   const stopHandle = () => {
     setIsListening(false);
@@ -45,14 +43,13 @@ const Speaky = () => {
   const handleOutput = async () => {
     setNote(null);
     //json output
-    const data = await ky.post(
-      "https://soapnotes-development-service.onrender.com/analyze",
-      {
+    const data = await ky
+      .post("https://soapnotes-development-service.onrender.com/analyze", {
         json: {
           q: transcript,
         },
-      }
-    ).json();
+      })
+      .json();
     setNote(data.text);
     setTextEnabled(true);
   };
