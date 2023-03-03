@@ -5,7 +5,7 @@ import SpeechRecognition, {
 import "./App.css";
 import ky from "ky";
 import microPhoneIcon from "./microphone.png";
-import { Oval } from 'react-loading-icons';
+import { Oval } from "react-loading-icons";
 
 const Speaky = () => {
   const { transcript, resetTranscript } = useSpeechRecognition();
@@ -51,6 +51,7 @@ const Speaky = () => {
         json: {
           q: transcript,
         },
+        timeout: false,
       })
       .json();
     setNote(data.text);
@@ -62,6 +63,7 @@ const Speaky = () => {
 
     await ky.post("https://soapnotes-development-service.onrender.com/text", {
       json: { q: note },
+      timeout: false,
     });
   };
 
@@ -93,16 +95,20 @@ const Speaky = () => {
           </button>
         }
         {
-          <button className="generative-outputs btn"
-                  onClick={handleOutput}>
-            {loading ? <Oval stroke="#fff"
-                             strokeWidth="10"
-                             height="20px"
-                             width="20px"/> :"Generate Note"}
+          <button className="generative-outputs btn" onClick={handleOutput}>
+            {loading ? (
+              <Oval stroke="#fff" strokeWidth="10" height="20px" width="20px" />
+            ) : (
+              "Generate Note"
+            )}
           </button>
         }
         {
-          <button className="output-text btn" onClick={handleText} disabled={!textEnabled}>
+          <button
+            className="output-text btn"
+            onClick={handleText}
+            disabled={!textEnabled}
+          >
             Text Note
           </button>
         }
